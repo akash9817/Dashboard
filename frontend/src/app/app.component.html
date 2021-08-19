@@ -1,0 +1,155 @@
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <span class="navbar-brand mb-0 h1">Dashboard</span>
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#exampleModal" (click)="this.addUser(true)">Add User</button>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-bordered mt-3">
+        <thead>
+          <tr>
+            <th scope="col">SNo.</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile No.</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of users; let i = index">
+            <th scope="row">{{i + 1}}</th>
+            <td>{{item.fname}}</td>
+            <td>{{item.lname}}</td>
+            <td>{{item.email}}</td>
+            <td>{{item.mobile}}</td>
+            <td class="d-flex justify-content-around">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" (click)="this.viewUser(item.id)"><i class="far fa-eye"></i></button>
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" (click)="this.updateUser(item.id)"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-danger" (click)="this.deleteUser(item.id)"><i class="far fa-trash-alt"></i></button>
+            </td>
+          </tr>
+          <!-- <tr>
+            <th scope="row">2</th>
+            <td>Bootstrap Grid 4 Tutorial and Examples</td>
+            <td>Cristina</td>
+            <td>3.417</td>
+            <td>
+              <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+              <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Bootstrap Flexbox Tutorial and Examples</td>
+            <td>Cristina</td>
+            <td>1.234</td>
+            <td>
+              <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+              <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="this.modal1">
+<div class="modal fade show" id="exampleModal" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{this.operationType}} User</h5>
+        <button type="button" class="close" #closebutton data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form (ngSubmit)="f.form.valid && (this.operationType ==  'Add' ?  addUser() : updateUser())" #f="ngForm" novalidate>
+      <div class="modal-body">
+          <div *ngIf="this.notificationFlag" class="my-3 px-2">
+            <p class="text-danger">{{this.notification}}</p>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">First Name</label>
+            <input type="email" class="form-control" placeholder="Enter First Name"
+            name="fname" [(ngModel)]="userForm.fname" #fname="ngModel" [ngClass]="{ 'is-invalid': f.submitted && fname.invalid }" required>
+            <div *ngIf="f.submitted" class="invalid-feedback">
+              <div *ngIf="fname.errors?.required">First Name is required</div>
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Last Name</label>
+            <input type="email" class="form-control" placeholder="Enter Last Name"
+            name="lname" [(ngModel)]="userForm.lname" #lname="ngModel" [ngClass]="{ 'is-invalid': f.submitted && lname.invalid }" required>
+            <div *ngIf="f.submitted && lname.invalid" class="invalid-feedback">
+              <div *ngIf="lname.errors?.required">Last Name is required</div>
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" placeholder="Enter Email"
+            name="email" [(ngModel)]="userForm.email" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required>
+            <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+              <div *ngIf="email.errors?.required">Email is required</div>
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Password</label>
+            <input type="email" class="form-control" placeholder="Enter Password"
+            name="password" [(ngModel)]="userForm.password" #password="ngModel" [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required>
+            <div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
+              <div *ngIf="password.errors?.required">Password is required</div>
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Mobile</label>
+            <input type="text" class="form-control" placeholder="Enter Mobile No."
+            name="mobile" [(ngModel)]="userForm.mobile" #mobile="ngModel" [ngClass]="{ 'is-invalid': f.submitted && mobile.invalid }" required>
+            <div *ngIf="f.submitted && mobile.invalid" class="invalid-feedback">
+              <div *ngIf="mobile.errors?.required">Mobile No. is required</div>
+          </div>
+          </div>
+          <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">{{this.operationType}}</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="this.modal2">
+<div class="modal show" id="exampleModal2" aria-labelledby="exampleModalLabel2" aria-modal="true" role="dialog" style="display: block;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel2">User Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b class="float-left">First Name </b>  <span class="mr-3 float-right">{{this.user?.fname}}</span></li>
+          <li class="list-group-item"><b class="float-left">Last Name </b>  <span class="mr-3 float-right">{{this.user?.lname}}</span></li>
+          <li class="list-group-item"><b class="float-left">Email </b>  <span class="mr-3 float-right">{{this.user?.email}}</span></li>
+          <li class="list-group-item"><b class="float-left">Mobile </b> <span class="mr-3 float-right">{{this.user?.mobile}}</span></li>
+          <li class="list-group-item"><b class="float-left">Password </b> <span class="mr-3 float-right">{{this.user?.password}}</span></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
